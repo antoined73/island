@@ -20,9 +20,9 @@ public class FindIsland extends Strategy {
     }
 
     private void initialize() {
-        addDecision(drone.echo(E));
-        addDecision(drone.echo(N));
-        addDecision(drone.echo(S));
+        Compass compass= new Compass();
+        addDecision(drone.echo(compass.getLeftOf(drone.getCurrentDirection())));
+        addDecision(drone.echo(compass.getRightOf(drone.getCurrentDirection())));
     }
 
     @Override

@@ -29,7 +29,6 @@ public class MapIslandStrategy extends Strategy {
     }
 
     private void initialize() {
-
         Echo echo = ((Echo)bot.getPreviousDecision());
         Direction previousEchoHeading = echo.getDirection();
         addDecision(drone.turn(previousEchoHeading));
@@ -98,7 +97,7 @@ public class MapIslandStrategy extends Strategy {
 
     private void scanNorthToSouth() {
         int y = drone.getY();
-        int yMax = map.getSizeWidth();
+        int yMax = map.getCurrentYMax();
         for(int i = y; i< yMax-1;i++) {
             addDecision(drone.scan());
             addDecision(drone.fly());

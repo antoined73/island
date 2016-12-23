@@ -9,6 +9,7 @@ import fr.unice.polytech.si3.qgl.iabe.parser.ContextParser;
 import fr.unice.polytech.si3.qgl.iabe.parser.ResultParser;
 import fr.unice.polytech.si3.qgl.iabe.result.Result;
 import fr.unice.polytech.si3.qgl.iabe.result.ResultFactory;
+import fr.unice.polytech.si3.qgl.iabe.strategy.Compass;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class MapTest {
                 "}");
 
         Bot bot = new Bot(parser);
-        this.drone = new Drone(E);
+        this.drone = new Drone(Direction.valueOf(parser.getHeading()));
         map = new Map(bot, drone);
     }
 
@@ -73,29 +74,39 @@ public class MapTest {
 
 
     @Test
-    public void getSizeHeight() throws Exception {
-        System.out.println(map.toString());
-        Echo previous = new Echo(E);
+    public void getMapTest() throws Exception {
+        //System.out.println(map.toString());
+
+        Compass compass = new Compass();
+        Direction direction1 = compass.getRightOf(drone.getCurrentDirection());
+        Direction direction2 = compass.getLeftOf(drone.getCurrentDirection());
+        Echo firstEcho = new Echo(direction1);
+        Echo secondEcho = new Echo(direction2);
+        Echo thirdEcho = new Echo(drone.getCurrentDirection());
+
+        Echo previous = firstEcho;
         ResultParser parser = new ResultParser("{ \"cost\": 1, \"extras\": { \"range\": 2, \"found\": \"GROUND\" }, \"status\": \"OK\" }");
         Result result = new ResultFactory(parser,previous).getResult();
         map.update(previous,result);
-        System.out.println(map.toString());
+        //System.out.println(map.toString());
 
-        previous = new Echo(N);
+        previous = secondEcho;
         parser = new ResultParser("{ \"cost\": 1, \"extras\": { \"range\": 3, \"found\": \"GROUND\" }, \"status\": \"OK\" }");
         result = new ResultFactory(parser,previous).getResult();
         map.update(previous,result);
-        System.out.println(map.toString());
+        //System.out.println(map.toString());
 
-        drone.fly();
-        drone.fly();
-        drone.fly();
-        previous = new Echo(W);
+        previous = thirdEcho;
+        parser = new ResultParser("{ \"cost\": 1, \"extras\": { \"range\": 8, \"found\": \"OUT_OF_RANGE\" }, \"status\": \"OK\" }");
+        result = new ResultFactory(parser,previous).getResult();
+        map.update(previous,result);
+        //System.out.println(map.toString());
+
+/*        previous = new Echo(S);
         parser = new ResultParser("{ \"cost\": 1, \"extras\": { \"range\": 3, \"found\": \"OUT_OF_RANGE\" }, \"status\": \"OK\" }");
         result = new ResultFactory(parser,previous).getResult();
         map.update(previous,result);
-        System.out.println(map.toString());
-
+        //System.out.println(map.toString());*/
 
     }
 

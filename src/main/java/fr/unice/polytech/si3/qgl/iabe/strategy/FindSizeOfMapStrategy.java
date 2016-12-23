@@ -33,6 +33,7 @@ public class FindSizeOfMapStrategy extends Strategy {
         Direction direction2 = compass.getLeftOf(initialDirection);
         addDecision(drone.echo(direction1));
         addDecision(drone.echo(direction2));
+        addDecision(drone.echo(initialDirection));
         addDecision(drone.fly());
     }
 

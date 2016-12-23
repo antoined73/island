@@ -26,8 +26,6 @@ public class Map extends Observer {
 
     private Drone drone;
     private List<AirTile> map;
-    private int sizeWidth = 1;
-    private int sizeHeight = 1;
 
     public Map(Bot bot, Drone drone) {
         super(bot);
@@ -36,7 +34,6 @@ public class Map extends Observer {
         this.map = new ArrayList<>();
 
         Direction firstSide = new Compass().getOppositeOf(drone.getCurrentDirection());
-        //setBorder(firstSide);
         map.add(new AirTile(0,0));
     }
 
@@ -64,13 +61,6 @@ public class Map extends Observer {
         }
     }
 
-    public int getSizeHeight() {
-        return sizeHeight;
-    }
-
-    public int getSizeWidth() {
-        return sizeWidth;
-    }
 
     public Drone getDrone() {
         return drone;
@@ -197,17 +187,20 @@ public class Map extends Observer {
         }
     }
     private void actuWithEchoResult(EchoResult result, Echo previousDecision) {
-        int range;
+        int range= result.getRange();
+        if(result.foundedGround()) range++;
+
         switch (previousDecision.getDirection()) {
-            case E: range = result.getRange();
-                if(result.foundedGround()) range++;
-                addColumnsEst(drone.getX(),drone.getY(),range); break;
-            case W: range = result.getRange();
-                if(result.foundedGround()) range++;
-                addColumnsWest(drone.getX(),drone.getY(),range); break;
-            case N: range = result.getRange();
-                if(result.foundedGround()) range++;
-                addLinesNorth(drone.getX(),drone.getY(),range); break;
+            case E: addColumnsEst(drone.getX(),drone.getY(),range); break;
+            case W: addColumnsWest(drone.getX(),drone.getY(),range); break;
+            case N: addLinesNorth(drone.getX(),drone.getY(),range); break;
+            case S: addLinesSouth(drone.getX(),drone.getY(),range); break;
+        }
+    }
+
+    private void addLinesSouth(int x, int y, int range) {
+        for (int i = 0; i < range; i++) {
+            addOneLine(y+i+1);
         }
     }
 
@@ -216,18 +209,6 @@ public class Map extends Observer {
             addOneLine(y-i-1);
         }
     }
-
-
-
-/*    public void setBorder(Direction border) {
-        switch (border){
-            case W: xMin = getCurrentXMin(); break;
-            case E: yMin = getCurrentYMin(); break;
-            case N: xMax = getCurrentXMax(); break;
-            case S: yMax = getCurrentYMax(); break;
-
-        }
-    }*/
 
     public int getCurrentXMin() {
         int min = map.get(0).getX();
@@ -279,7 +260,7 @@ public class Map extends Observer {
                     String yString = (airTile.get().getY()<0?""+airTile.get().getY():" "+airTile.get().getY());
                     sb.append("|"+xString+","+yString+"|");
                 }else{
-                    sb.append("|...|");
+                    sb.append("|.....|");
                 }
             }
             sb.append("\n");
