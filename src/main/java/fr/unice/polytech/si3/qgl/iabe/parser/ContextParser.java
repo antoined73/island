@@ -29,9 +29,9 @@ public class ContextParser extends Parser {
         return jsonObject.getString("heading");
     }
 
-    public List<Primary> getPrimaryContracts() {
+    public ArrayList<Primary> getPrimaryContracts() {
 
-        List<Primary> res = new ArrayList<>();
+        ArrayList<Primary> res = new ArrayList<>();
 
         JSONObject contract;
 
@@ -61,9 +61,9 @@ public class ContextParser extends Parser {
 
     }
 
-    public List<Crafted> getCraftContracts() {
+    public ArrayList<Crafted> getCraftContracts() {
 
-        List<Crafted> res = new ArrayList<>();
+        ArrayList<Crafted> res = new ArrayList<>();
 
         JSONObject contract;
 
