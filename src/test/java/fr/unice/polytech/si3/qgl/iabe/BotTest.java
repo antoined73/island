@@ -1,10 +1,8 @@
 package fr.unice.polytech.si3.qgl.iabe;
 
+import fr.unice.polytech.si3.qgl.iabe.Resources.ContextParser;
 import fr.unice.polytech.si3.qgl.iabe.decisions.Decision;
 import fr.unice.polytech.si3.qgl.iabe.decisions.Stop;
-import fr.unice.polytech.si3.qgl.iabe.parser.ContextParser;
-import fr.unice.polytech.si3.qgl.iabe.parser.Parser;
-import fr.unice.polytech.si3.qgl.iabe.parser.ResultParser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

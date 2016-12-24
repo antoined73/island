@@ -1,12 +1,12 @@
 package fr.unice.polytech.si3.qgl.iabe;
 
+import fr.unice.polytech.si3.qgl.iabe.Resources.ContextParser;
 import fr.unice.polytech.si3.qgl.iabe.Resources.Resources;
+import fr.unice.polytech.si3.qgl.iabe.Resources.ResultParser;
 import fr.unice.polytech.si3.qgl.iabe.decisions.Decision;
 import fr.unice.polytech.si3.qgl.iabe.decisions.Stop;
 import fr.unice.polytech.si3.qgl.iabe.map.Map;
 import fr.unice.polytech.si3.qgl.iabe.observer.Observable;
-import fr.unice.polytech.si3.qgl.iabe.parser.ContextParser;
-import fr.unice.polytech.si3.qgl.iabe.parser.ResultParser;
 import fr.unice.polytech.si3.qgl.iabe.result.Result;
 import fr.unice.polytech.si3.qgl.iabe.strategy.FindSizeOfMapStrategy;
 import fr.unice.polytech.si3.qgl.iabe.strategy.Strategy;
@@ -25,12 +25,14 @@ public class Bot extends Observable{
     private Map map;
     private Journal journal;
     private Resources resources;
+    private Driver driver;
 
 
     public Bot(ContextParser parser) {
         this.map = new Map(this, new Drone(Direction.valueOf(parser.getHeading())));
         this.journal = new Journal();
         setCurrentStrategy(new FindSizeOfMapStrategy(this));
+        this.driver = new Driver(currentStrategy);
     }
 
     /**
@@ -41,24 +43,14 @@ public class Bot extends Observable{
      */
     public Decision takeDecision(){
         Optional<Decision> decision;
-        if(currentStrategy.isFinished()){
-            if(currentStrategy.hasNextStrategy()) { //Change strategy and get its first decision
-                getNextStrategy();
-                decision = currentStrategy.getNextDecision();
-            }else{ // no more strategy, stop the bot
-                return stopTheBot();
-            }
-        }else{
-            decision = currentStrategy.getNextDecision();
-        }
-
+        decision = driver.getNextDecision();
         //security in order to NOT crash
         if(decision.isPresent()){
+            setPreviousDecision(decision);
             return decision.get();
         }else{
             return stopTheBot();
         }
-
     }
 
     /**
@@ -92,7 +84,7 @@ public class Bot extends Observable{
     public void acknowledgeResults(ResultParser parser){
         setState(parser);
         Result result = new ResultFactory(parser,previousDecision.get()).getResult();
-        this.currentStrategy.acknowledgeResults(result);
+        //this.currentStrategy.acknowledgeResults(result);
     }
 
 
@@ -114,7 +106,7 @@ public class Bot extends Observable{
     }
 
     public void setState(ResultParser result){
-        setPreviousDecision(previousDecision);
+        setPreviousDecision(previousDecision.get());
         setResultParser(result);
         notifyAllObservers();
     }

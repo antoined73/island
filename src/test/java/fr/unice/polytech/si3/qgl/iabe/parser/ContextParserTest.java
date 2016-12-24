@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.iabe.parser;
 
+import fr.unice.polytech.si3.qgl.iabe.Resources.ContextParser;
 import fr.unice.polytech.si3.qgl.iabe.Resources.Crafted;
 import fr.unice.polytech.si3.qgl.iabe.Resources.Primary;
 import org.junit.Before;

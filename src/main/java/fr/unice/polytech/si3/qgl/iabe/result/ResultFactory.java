@@ -1,11 +1,8 @@
 package fr.unice.polytech.si3.qgl.iabe.result;
 
+import fr.unice.polytech.si3.qgl.iabe.Resources.ResultParser;
 import fr.unice.polytech.si3.qgl.iabe.decisions.Decision;
-import fr.unice.polytech.si3.qgl.iabe.parser.ResultParser;
-import fr.unice.polytech.si3.qgl.iabe.result.factories.EchoFactory;
-import fr.unice.polytech.si3.qgl.iabe.result.factories.FlyFactory;
-import fr.unice.polytech.si3.qgl.iabe.result.factories.ScanFactory;
-import fr.unice.polytech.si3.qgl.iabe.result.factories.Factory;
+import fr.unice.polytech.si3.qgl.iabe.result.factories.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +24,7 @@ public class ResultFactory {
         hashmap.put("echo",new EchoFactory(parser));
         hashmap.put("scan",new ScanFactory(parser));
         hashmap.put("fly",new FlyFactory(parser));
+        hashmap.put("stop",new StopFactory(parser));
     }
 
     public Result getResult() {

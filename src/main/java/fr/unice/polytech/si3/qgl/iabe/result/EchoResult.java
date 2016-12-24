@@ -1,7 +1,6 @@
 package fr.unice.polytech.si3.qgl.iabe.result;
 
-import fr.unice.polytech.si3.qgl.iabe.parser.Parser;
-import fr.unice.polytech.si3.qgl.iabe.parser.ResultParser;
+import fr.unice.polytech.si3.qgl.iabe.Resources.ResultParser;
 
 /**
  * Created by Antoine on 12/3/2016.

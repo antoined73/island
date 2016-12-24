@@ -1,8 +1,6 @@
 package fr.unice.polytech.si3.qgl.iabe;
 
-import fr.unice.polytech.si3.qgl.iabe.parser.Parser;
-import fr.unice.polytech.si3.qgl.iabe.parser.ResultParser;
-import fr.unice.polytech.si3.qgl.iabe.result.Result;
+import fr.unice.polytech.si3.qgl.iabe.Resources.ResultParser;
 import org.junit.Test;
 
 import java.util.List;

@@ -1,7 +1,8 @@
-package fr.unice.polytech.si3.qgl.iabe.parser;
+package fr.unice.polytech.si3.qgl.iabe.Resources;
 
 import fr.unice.polytech.si3.qgl.iabe.Resources.Crafted;
 import fr.unice.polytech.si3.qgl.iabe.Resources.Primary;
+import fr.unice.polytech.si3.qgl.iabe.Resources.Parser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

@@ -3,10 +3,10 @@ package fr.unice.polytech.si3.qgl.iabe.map;
 import fr.unice.polytech.si3.qgl.iabe.Bot;
 import fr.unice.polytech.si3.qgl.iabe.Direction;
 import fr.unice.polytech.si3.qgl.iabe.Drone;
+import fr.unice.polytech.si3.qgl.iabe.Resources.ResultParser;
 import fr.unice.polytech.si3.qgl.iabe.decisions.Decision;
 import fr.unice.polytech.si3.qgl.iabe.decisions.Echo;
 import fr.unice.polytech.si3.qgl.iabe.observer.Observer;
-import fr.unice.polytech.si3.qgl.iabe.parser.ResultParser;
 import fr.unice.polytech.si3.qgl.iabe.result.EchoResult;
 import fr.unice.polytech.si3.qgl.iabe.result.Result;
 import fr.unice.polytech.si3.qgl.iabe.result.ResultFactory;
@@ -15,9 +15,6 @@ import fr.unice.polytech.si3.qgl.iabe.strategy.Compass;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static fr.unice.polytech.si3.qgl.iabe.Direction.E;
-import static fr.unice.polytech.si3.qgl.iabe.Direction.W;
 
 /**
  * Created by Antoine on 12/3/2016.
@@ -101,65 +98,65 @@ public class Map extends Observer {
         }
     }*/
 
-/*    public boolean isDiscovered(Direction heading, int posDroneX, int posDroneY) {
+    public boolean isDiscovered(Direction heading, int posDroneX, int posDroneY) {
+        Optional<AirTile> airTile;
         switch (heading) {
             case E:
-                if (posDroneX + 1 < sizeWidth && posDroneY >= 0 && posDroneY < sizeHeight)
-                    return map[posDroneX + 1][posDroneY].isDiscovered();
+                airTile = getAirTile(posDroneX+1,posDroneY);
                 break;
             case S:
-                if (posDroneY + 1 < sizeHeight && posDroneX >= 0 && posDroneX < sizeWidth)
-                    return map[posDroneX][posDroneY + 1].isDiscovered();
+                airTile = getAirTile(posDroneX,posDroneY+1);
                 break;
             case W:
-                if (posDroneX - 1 > 0 && posDroneY >= 0 && posDroneY < sizeHeight)
-                    return map[posDroneX - 1][posDroneY].isDiscovered();
+                airTile = getAirTile(posDroneX-1,posDroneY);
                 break;
             case N:
-                if (posDroneY - 1 > 0 && posDroneX >= 0 && posDroneX < sizeWidth)
-                    return map[posDroneX][posDroneY - 1].isDiscovered();
+                airTile = getAirTile(posDroneX,posDroneY-1);
                 break;
-            default:
-                return false;
+            default: airTile = Optional.empty(); break;
         }
-        return false;
-    }*/
+        if(airTile.isPresent()){
+            return  airTile.get().isDiscovered();
+        }else{
+            return false;
+        }
+    }
 
-/*    public boolean foundGround(Direction heading, int posDroneX, int posDroneY) {
+    public boolean foundGround(Direction heading, int posDroneX, int posDroneY) {
         switch (heading) {
             case E:
-                if (posDroneY >= 0 && posDroneY < sizeHeight)
-                    for (int i = posDroneX; i < sizeWidth; i++) {
-                        if (map[i][posDroneY].isGround())
+                for (AirTile airTile: map) {
+                    if(airTile.getY()==posDroneY && airTile.getX() > posDroneX)
+                        if (airTile.isGround())
                             return true;
-                    }
+                }
                 break;
             case S:
-                if (posDroneX >= 0 && posDroneX < sizeWidth)
-                    for (int j = posDroneY; j < sizeHeight; j++) {
-                        if (map[posDroneX][j].isGround())
+                for (AirTile airTile: map) {
+                    if(airTile.getX()==posDroneX && airTile.getY() > posDroneY)
+                        if (airTile.isGround())
                             return true;
-                    }
+                }
                 break;
             case W:
-                if (posDroneY >= 0 && posDroneY < sizeHeight)
-                    for (int i = posDroneX; i > 0; i--) {
-                        if (map[i][posDroneY].isGround())
+                for (AirTile airTile: map) {
+                    if(airTile.getY()==posDroneY && airTile.getX() < posDroneX)
+                        if (airTile.isGround())
                             return true;
-                    }
+                }
                 break;
             case N:
-                if (posDroneX >= 0 && posDroneX < sizeWidth)
-                    for (int j = posDroneY; j > 0; j--) {
-                        if (map[posDroneX][j].isGround())
+                for (AirTile airTile: map) {
+                    if(airTile.getX()==posDroneX && airTile.getY() < posDroneY)
+                        if (airTile.isGround())
                             return true;
-                    }
+                }
                 break;
             default:
                 return false;
         }
         return false;
-    }*/
+    }
 
     @Override
     public void update() {

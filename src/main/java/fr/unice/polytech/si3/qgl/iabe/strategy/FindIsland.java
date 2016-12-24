@@ -1,9 +1,12 @@
 package fr.unice.polytech.si3.qgl.iabe.strategy;
 
 import fr.unice.polytech.si3.qgl.iabe.*;
+import fr.unice.polytech.si3.qgl.iabe.decisions.Decision;
 import fr.unice.polytech.si3.qgl.iabe.map.Map;
 import fr.unice.polytech.si3.qgl.iabe.result.EchoResult;
 import fr.unice.polytech.si3.qgl.iabe.result.Result;
+
+import java.util.List;
 
 import static fr.unice.polytech.si3.qgl.iabe.Direction.*;
 
@@ -16,17 +19,10 @@ public class FindIsland extends Strategy {
 
     public FindIsland(Bot bot) {
         super(bot);
-        initialize();
-    }
-
-    private void initialize() {
-        Compass compass= new Compass();
-        addDecision(drone.echo(compass.getLeftOf(drone.getCurrentDirection())));
-        addDecision(drone.echo(compass.getRightOf(drone.getCurrentDirection())));
     }
 
     @Override
-    public void acknowledgeResults(Result result) {
+    public void getDecisions(List<Decision> listOfDecision) {
         /*if(!finished) {
 
             if (previousDecisionWasEcho()) {
@@ -39,19 +35,37 @@ public class FindIsland extends Strategy {
                 }
             }
         }*/
+        boolean groundFoundedOnLeftOfDrone = map.foundGround(drone.getLeft(),drone.getX(),drone.getY());
+        if(groundFoundedOnLeftOfDrone){
+            listOfDecision.add(drone.turnLeft());
+            finishStrategy();
+        }
+        boolean groundFoundedOnRightOfDrone = map.foundGround(drone.getRight(),drone.getX(),drone.getY());
+        if(groundFoundedOnRightOfDrone){
+            listOfDecision.add(drone.turnRight());
+            finishStrategy();
+        }
+
+        boolean mapNotDiscoveredOnRightOfDrone= !map.isDiscovered(drone.getRight(), drone.getX(), drone.getY());
+        if(mapNotDiscoveredOnRightOfDrone){
+            listOfDecision.add(drone.echoRight());
+        }
+
+        boolean mapNotDiscoveredOnLeftOfDrone= !map.isDiscovered(drone.getLeft(), drone.getX(), drone.getY());
+        if(mapNotDiscoveredOnLeftOfDrone){
+            listOfDecision.add(drone.echoLeft());
+        }
     }
 
     @Override
     public void finishStrategy() {
-        removeAllDecision();
         setNextStrategy(new MapIslandStrategy(bot));
-        finished = true;
         isFinished = true;
     }
 
-    private void flyAndEchoUpAndDown() {
-        addDecision(drone.fly());
-        addDecision(drone.echo(N));
-        addDecision(drone.echo(S));
+    @Override
+    public void initialize(List<Decision> listOfDecision) {
+        listOfDecision.add(drone.echoLeft());
+        listOfDecision.add(drone.echoRight());
     }
 }

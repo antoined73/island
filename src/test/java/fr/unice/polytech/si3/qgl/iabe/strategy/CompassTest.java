@@ -1,9 +1,6 @@
 package fr.unice.polytech.si3.qgl.iabe.strategy;
 
-import fr.unice.polytech.si3.qgl.iabe.Bot;
 import fr.unice.polytech.si3.qgl.iabe.Direction;
-import fr.unice.polytech.si3.qgl.iabe.decisions.Decision;
-import fr.unice.polytech.si3.qgl.iabe.parser.ContextParser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

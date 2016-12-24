@@ -1,11 +1,14 @@
 package fr.unice.polytech.si3.qgl.iabe.strategy;
 
 import fr.unice.polytech.si3.qgl.iabe.*;
+import fr.unice.polytech.si3.qgl.iabe.decisions.Decision;
 import fr.unice.polytech.si3.qgl.iabe.decisions.Echo;
 import fr.unice.polytech.si3.qgl.iabe.map.Map;
 import fr.unice.polytech.si3.qgl.iabe.result.EchoResult;
 import fr.unice.polytech.si3.qgl.iabe.result.Result;
 import fr.unice.polytech.si3.qgl.iabe.result.ScanResult;
+
+import java.util.List;
 
 import static fr.unice.polytech.si3.qgl.iabe.Direction.N;
 import static fr.unice.polytech.si3.qgl.iabe.Direction.S;
@@ -25,18 +28,10 @@ public class MapIslandStrategy extends Strategy {
         this.bot = bot;
         this.map = bot.getMap();
         this.drone = map.getDrone();
-        initialize();
-    }
-
-    private void initialize() {
-        Echo echo = ((Echo)bot.getPreviousDecision());
-        Direction previousEchoHeading = echo.getDirection();
-        addDecision(drone.turn(previousEchoHeading));
-        addDecision(drone.echo(previousEchoHeading));
     }
 
     @Override
-    public void acknowledgeResults(Result result) {
+    public void getDecisions(List<Decision> listOfDecision) {
         /*if(!finished) {
             if (previousDecisionWasEcho()) {
                 EchoResult echoresult = (EchoResult) result;
@@ -80,7 +75,12 @@ public class MapIslandStrategy extends Strategy {
         isFinished = true;
     }
 
-    private void scanSouthToNorth() {
+    @Override
+    public void initialize(List<Decision> listOfDecision) {
+        listOfDecision.add(drone.echoForward());
+    }
+
+   /* private void scanSouthToNorth() {
         int y = drone.getY();
         for(int i = y; i>1;i--) {
             addDecision(drone.scan());
@@ -109,5 +109,5 @@ public class MapIslandStrategy extends Strategy {
         }
         addDecision(drone.turn(N));
         addDecision(drone.echo(N));
-    }
+    }*/
 }

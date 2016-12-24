@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.iabe.result.factories;
 
-import fr.unice.polytech.si3.qgl.iabe.parser.ResultParser;
+import fr.unice.polytech.si3.qgl.iabe.Resources.ResultParser;
 import fr.unice.polytech.si3.qgl.iabe.result.EchoResult;
 import fr.unice.polytech.si3.qgl.iabe.result.Result;
 

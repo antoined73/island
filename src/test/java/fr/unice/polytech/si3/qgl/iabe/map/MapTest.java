@@ -3,19 +3,15 @@ package fr.unice.polytech.si3.qgl.iabe.map;
 import fr.unice.polytech.si3.qgl.iabe.Bot;
 import fr.unice.polytech.si3.qgl.iabe.Drone;
 import fr.unice.polytech.si3.qgl.iabe.Direction;
-import fr.unice.polytech.si3.qgl.iabe.decisions.Decision;
+import fr.unice.polytech.si3.qgl.iabe.Resources.ContextParser;
+import fr.unice.polytech.si3.qgl.iabe.Resources.ResultParser;
 import fr.unice.polytech.si3.qgl.iabe.decisions.Echo;
-import fr.unice.polytech.si3.qgl.iabe.parser.ContextParser;
-import fr.unice.polytech.si3.qgl.iabe.parser.ResultParser;
 import fr.unice.polytech.si3.qgl.iabe.result.Result;
 import fr.unice.polytech.si3.qgl.iabe.result.ResultFactory;
 import fr.unice.polytech.si3.qgl.iabe.strategy.Compass;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static fr.unice.polytech.si3.qgl.iabe.Direction.*;
-import static org.junit.Assert.*;
 
 /**
  * Created by Enzo on 11/12/2016.

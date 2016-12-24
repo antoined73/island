@@ -1,9 +1,5 @@
 package fr.unice.polytech.si3.qgl.iabe.Resources;
 
-import fr.unice.polytech.si3.qgl.iabe.parser.ContextParser;
-import fr.unice.polytech.si3.qgl.iabe.parser.Parser;
-import fr.unice.polytech.si3.qgl.iabe.parser.ResultParser;
-import fr.unice.polytech.si3.qgl.iabe.result.Result;
 
 /**
  * Created by Enzo on 08/12/2016.

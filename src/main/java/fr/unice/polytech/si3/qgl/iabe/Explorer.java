@@ -1,10 +1,9 @@
 package fr.unice.polytech.si3.qgl.iabe;
 
 import eu.ace_design.island.bot.IExplorerRaid;
+import fr.unice.polytech.si3.qgl.iabe.Resources.ContextParser;
+import fr.unice.polytech.si3.qgl.iabe.Resources.ResultParser;
 import fr.unice.polytech.si3.qgl.iabe.decisions.Decision;
-import fr.unice.polytech.si3.qgl.iabe.parser.ContextParser;
-import fr.unice.polytech.si3.qgl.iabe.parser.Parser;
-import fr.unice.polytech.si3.qgl.iabe.parser.ResultParser;
 
 public class Explorer implements IExplorerRaid {
 

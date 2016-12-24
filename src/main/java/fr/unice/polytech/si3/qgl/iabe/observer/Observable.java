@@ -1,10 +1,8 @@
 package fr.unice.polytech.si3.qgl.iabe.observer;
 
+import fr.unice.polytech.si3.qgl.iabe.Resources.ResultParser;
 import fr.unice.polytech.si3.qgl.iabe.decisions.Decision;
-import fr.unice.polytech.si3.qgl.iabe.parser.ResultParser;
-import fr.unice.polytech.si3.qgl.iabe.result.Result;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,5 +1,7 @@
-package fr.unice.polytech.si3.qgl.iabe.parser;
+package fr.unice.polytech.si3.qgl.iabe.Resources;
 
+
+import fr.unice.polytech.si3.qgl.iabe.Resources.Parser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -9,7 +11,7 @@ import java.util.List;
 /**
  * Created by Antoine on 12/11/2016.
  */
-public class ResultParser extends Parser{
+public class ResultParser extends Parser {
 
     private final JSONObject jsonExtras;
 

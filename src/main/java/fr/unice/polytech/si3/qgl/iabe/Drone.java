@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.iabe;
 
 import fr.unice.polytech.si3.qgl.iabe.decisions.*;
 import fr.unice.polytech.si3.qgl.iabe.map.Map;
+import fr.unice.polytech.si3.qgl.iabe.strategy.Compass;
 import fr.unice.polytech.si3.qgl.iabe.strategy.Strategy;
 
 /**
@@ -81,4 +82,31 @@ public class Drone {
         this.xPosition--;
     }
 
+    public Decision turnLeft() {
+        return turn(new Compass().getLeftOf(current_direction));
+    }
+
+    public Decision turnRight() {
+        return turn(new Compass().getRightOf(current_direction));
+    }
+
+    public Decision echoForward() {
+        return  echo(current_direction);
+    }
+
+    public Decision echoRight() {
+        return echo(new Compass().getRightOf(current_direction));
+    }
+
+    public Decision echoLeft() {
+        return echo(new Compass().getLeftOf(current_direction));
+    }
+
+    public Direction getLeft() {
+        return new Compass().getLeftOf(current_direction);
+    }
+
+    public Direction getRight() {
+        return new Compass().getRightOf(current_direction);
+    }
 }
