@@ -55,6 +55,10 @@ public class FindIsland extends Strategy {
         if(mapNotDiscoveredOnLeftOfDrone){
             listOfDecision.add(drone.echoLeft());
         }
+
+        if(!mapNotDiscoveredOnLeftOfDrone && !mapNotDiscoveredOnRightOfDrone){
+            listOfDecision.add(drone.fly());
+        }
     }
 
     @Override
@@ -65,7 +69,7 @@ public class FindIsland extends Strategy {
 
     @Override
     public void initialize(List<Decision> listOfDecision) {
-        listOfDecision.add(drone.echoLeft());
-        listOfDecision.add(drone.echoRight());
+        /*listOfDecision.add(drone.echoLeft());
+        listOfDecision.add(drone.echoRight());*/
     }
 }

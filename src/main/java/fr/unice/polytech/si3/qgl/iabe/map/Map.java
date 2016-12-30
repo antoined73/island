@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 /**
  * Created by Antoine on 12/3/2016.
  */
@@ -23,6 +24,11 @@ public class Map extends Observer {
 
     private Drone drone;
     private List<AirTile> map;
+
+    private Optional<Integer> WestBorderCoordinate = Optional.empty();
+    private Optional<Integer> EastBorderCoordinate = Optional.empty();
+    private Optional<Integer> SouthBorderCoordinate = Optional.empty();
+    private Optional<Integer> NorthBorderCoordinate = Optional.empty();
 
     public Map(Bot bot, Drone drone) {
         super(bot);
@@ -34,30 +40,69 @@ public class Map extends Observer {
         map.add(new AirTile(0,0));
     }
 
-    public void addColumnsEst(int xDrone, int yDrone, int numberOfColumnsToAdd) {
-        for (int i = 0; i < numberOfColumnsToAdd; i++) {
+    public void addColumnsEst(int xDrone, int range) {
+        for (int i = 0; i < range; i++) {
             addOneColumn(xDrone+i+1);
         }
+//        setColumnBorder(xDrone+range);
     }
 
-    private void addColumnsWest(int xDrone, int yDrone, int numberOfColumnsToAdd) {
-        for (int i = 0; i < numberOfColumnsToAdd; i++) {
+    private void addColumnsWest(int xDrone, int range) {
+        for (int i = 0; i < range; i++) {
             addOneColumn(xDrone-i-1);
         }
+//        setColumnBorder(xDrone-range);
+    }
+
+
+    private void addLinesSouth(int yDrone, int range) {
+        for (int i = 0; i < range; i++) {
+            addOneLine(yDrone+i+1);
+        }
+//        setLineBorder(yDrone+range);
+    }
+
+    private void addLinesNorth(int yDrone, int range) {
+        for (int i = 0; i < range; i++) {
+            addOneLine(yDrone-i-1);
+        }
+//        setLineBorder(yDrone-range);
     }
 
     public void addOneColumn(int xCoordinate) {
         for (int i = getCurrentYMin(); i <= getCurrentYMax(); i++) {
-            map.add(new AirTile(xCoordinate,i));
+            addAirTile(xCoordinate,i);//map.add(new AirTile(xCoordinate,i));
         }
     }
 
     public void addOneLine(int yCoordinate) {
         for (int i = getCurrentXMin(); i <= getCurrentXMax(); i++) {
-            map.add(new AirTile(i,yCoordinate));
+            addAirTile(i,yCoordinate); //map.add(new AirTile(i,yCoordinate));
         }
     }
 
+    private void addAirTile(int x, int y) {
+        boolean isNorthBorder = false;
+        boolean isSouthBorder = false;
+        boolean isEastBorder = false;
+        boolean isWestBorder = false;
+        boolean isBorder;
+        if(NorthBorderCoordinate.isPresent()){
+            isNorthBorder = y<=NorthBorderCoordinate.get();
+        }
+        if(SouthBorderCoordinate.isPresent()){
+            isSouthBorder = y>=SouthBorderCoordinate.get();
+        }
+        if(EastBorderCoordinate.isPresent()){
+            isEastBorder = x>=EastBorderCoordinate.get();
+        }
+        if(WestBorderCoordinate.isPresent()){
+            isWestBorder = x<=WestBorderCoordinate.get();
+        }
+
+        isBorder = isEastBorder||isWestBorder||isNorthBorder||isSouthBorder;
+        map.add(new AirTile(x,y,isBorder));
+    }
 
     public Drone getDrone() {
         return drone;
@@ -116,7 +161,7 @@ public class Map extends Observer {
             default: airTile = Optional.empty(); break;
         }
         if(airTile.isPresent()){
-            return  airTile.get().isDiscovered();
+            return  true;
         }else{
             return false;
         }
@@ -127,28 +172,28 @@ public class Map extends Observer {
             case E:
                 for (AirTile airTile: map) {
                     if(airTile.getY()==posDroneY && airTile.getX() > posDroneX)
-                        if (airTile.isGround())
+                        if (airTile.containGround())
                             return true;
                 }
                 break;
             case S:
                 for (AirTile airTile: map) {
                     if(airTile.getX()==posDroneX && airTile.getY() > posDroneY)
-                        if (airTile.isGround())
+                        if (airTile.containGround())
                             return true;
                 }
                 break;
             case W:
                 for (AirTile airTile: map) {
                     if(airTile.getY()==posDroneY && airTile.getX() < posDroneX)
-                        if (airTile.isGround())
+                        if (airTile.containGround())
                             return true;
                 }
                 break;
             case N:
                 for (AirTile airTile: map) {
                     if(airTile.getX()==posDroneX && airTile.getY() < posDroneY)
-                        if (airTile.isGround())
+                        if (airTile.containGround())
                             return true;
                 }
                 break;
@@ -184,61 +229,115 @@ public class Map extends Observer {
         }
     }
     private void actuWithEchoResult(EchoResult result, Echo previousDecision) {
-        int range= result.getRange();
-        if(result.foundedGround()) range++;
+        int range= result.getRange()+1;
+        if(!result.foundedGround()){
+            switch (previousDecision.getDirection()) {
+                case E: EastBorderCoordinate = Optional.of(drone.getX()+range); break;
+                case W: WestBorderCoordinate = Optional.of(drone.getX()-range); break;
+                case N: NorthBorderCoordinate = Optional.of(drone.getY()-range); break;
+                case S: SouthBorderCoordinate = Optional.of(drone.getY()+range); break;
+            }
+        }
 
         switch (previousDecision.getDirection()) {
-            case E: addColumnsEst(drone.getX(),drone.getY(),range); break;
-            case W: addColumnsWest(drone.getX(),drone.getY(),range); break;
-            case N: addLinesNorth(drone.getX(),drone.getY(),range); break;
-            case S: addLinesSouth(drone.getX(),drone.getY(),range); break;
+            case E: addColumnsEst(drone.getX(),range); break;
+            case W: addColumnsWest(drone.getX(),range); break;
+            case N: addLinesNorth(drone.getY(),range); break;
+            case S: addLinesSouth(drone.getY(),range); break;
+        }
+
+
+
+        Optional<AirTile> lastAirTile = Optional.empty();
+        switch (previousDecision.getDirection()) {
+            case S: lastAirTile = getAirTile(drone.getX(),drone.getY()+range);
+                break;
+            case N: lastAirTile = getAirTile(drone.getX(),drone.getY()-range);
+                break;
+            case W:  lastAirTile = getAirTile(drone.getX()-range,drone.getY());
+                break;
+            case E:  lastAirTile = getAirTile(drone.getX()+range,drone.getY());
+                break;
+        }
+
+        if(result.foundedGround()) {
+            if(lastAirTile.isPresent()){
+                lastAirTile.get().setContainGround(true);
+            }
+        }/*else{
+            if(lastAirTile.isPresent()){
+                lastAirTile.get().setIsBorder(true);
+            }
+        }*/
+    }
+
+/*    private void setColumnBorder(int xColumn) {
+        int yMax = getCurrentYMax();
+        int yMin = getCurrentYMin();
+        for(int y = yMin; y< yMax+1;y++){
+            getAirTile(xColumn,y).get().setIsBorder(true);
         }
     }
 
-    private void addLinesSouth(int x, int y, int range) {
-        for (int i = 0; i < range; i++) {
-            addOneLine(y+i+1);
+    private void setLineBorder(int yLine) {
+        int xMax = getCurrentXMax();
+        int xMin = getCurrentXMin();
+        for(int x = xMin; x< xMax+1;x++){
+            getAirTile(x,yLine).get().setIsBorder(true);
         }
-    }
-
-    private void addLinesNorth(int x, int y, int range) {
-        for (int i = 0; i < range; i++) {
-            addOneLine(y-i-1);
-        }
-    }
+    }*/
 
     public int getCurrentXMin() {
         int min = map.get(0).getX();
-        for(AirTile airTile: map) {
-            int current = airTile.getX();
-            if(current < min) min = current;
+        if(WestBorderCoordinate.isPresent()){
+            min = WestBorderCoordinate.get();
+        }else{
+            for(AirTile airTile: map) {
+                int current = airTile.getX();
+                if (current < min) min = current;
+
+            }
         }
         return min;
     }
 
     public int getCurrentXMax() {
         int max = map.get(0).getX();
-        for(AirTile airTile: map) {
-            int current = airTile.getX();
-            if(current > max) max = current;
+        if(EastBorderCoordinate.isPresent()){
+            max = EastBorderCoordinate.get();
+        }else{
+            for(AirTile airTile: map) {
+                int current = airTile.getX();
+                if (current > max) max = current;
+
+            }
         }
         return max;
     }
 
     public int getCurrentYMin() {
         int min = map.get(0).getY();
-        for(AirTile airTile: map) {
-            int current = airTile.getY();
-            if(current < min) min = current;
+        if(NorthBorderCoordinate.isPresent()){
+            min = NorthBorderCoordinate.get();
+        }else{
+            for(AirTile airTile: map) {
+                int current = airTile.getY();
+                if (current < min) min = current;
+
+            }
         }
         return min;
     }
 
     public int getCurrentYMax() {
         int max = map.get(0).getY();
-        for(AirTile airTile: map) {
-            int current = airTile.getY();
-            if(current > max) max = current;
+        if(SouthBorderCoordinate.isPresent()){
+            max = SouthBorderCoordinate.get();
+        }else{
+            for(AirTile airTile: map) {
+                int current = airTile.getY();
+                if (current > max) max = current;
+            }
         }
         return max;
     }
@@ -253,9 +352,14 @@ public class Map extends Observer {
             for(int x = xMin; x< xMax+1;x++){
                 Optional<AirTile> airTile = getAirTile(x,y);
                 if(airTile.isPresent()){
-                    String xString = (airTile.get().getX()<0?""+airTile.get().getX():" "+airTile.get().getX());
-                    String yString = (airTile.get().getY()<0?""+airTile.get().getY():" "+airTile.get().getY());
-                    sb.append("|"+xString+","+yString+"|");
+                    if(airTile.get().isBorder()){
+                        sb.append("|-----|");
+                    }else{
+                        String xString = (airTile.get().getX()<0?""+airTile.get().getX():" "+airTile.get().getX());
+                        String yString = (airTile.get().getY()<0?""+airTile.get().getY():" "+airTile.get().getY());
+                        sb.append("|"+xString+","+yString+"|"+airTile.get().containGround());
+                    }
+
                 }else{
                     sb.append("|.....|");
                 }

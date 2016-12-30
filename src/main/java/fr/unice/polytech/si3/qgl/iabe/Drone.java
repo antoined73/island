@@ -10,11 +10,10 @@ import fr.unice.polytech.si3.qgl.iabe.strategy.Strategy;
  */
 public class Drone {
     private Direction current_direction;
-    private int xPosition;
-    private int yPosition;
+    private int xPosition = 0;
+    private int yPosition = 0;
 
     public Drone(Direction direction) {
-        xPosition = 0;
         this.current_direction = direction;
     }
 

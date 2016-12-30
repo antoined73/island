@@ -71,7 +71,7 @@ public class MapTest {
 
     @Test
     public void getMapTest() throws Exception {
-        //System.out.println(map.toString());
+        System.out.println(map.toString());
 
         Compass compass = new Compass();
         Direction direction1 = compass.getRightOf(drone.getCurrentDirection());
@@ -81,22 +81,22 @@ public class MapTest {
         Echo thirdEcho = new Echo(drone.getCurrentDirection());
 
         Echo previous = firstEcho;
-        ResultParser parser = new ResultParser("{ \"cost\": 1, \"extras\": { \"range\": 2, \"found\": \"GROUND\" }, \"status\": \"OK\" }");
+        ResultParser parser = new ResultParser("{ \"cost\": 1, \"extras\": { \"range\": 2, \"found\": \"OUT_OF_RANGE\" }, \"status\": \"OK\" }");
         Result result = new ResultFactory(parser,previous).getResult();
         map.update(previous,result);
-        //System.out.println(map.toString());
+        System.out.println(map.toString());
 
         previous = secondEcho;
         parser = new ResultParser("{ \"cost\": 1, \"extras\": { \"range\": 3, \"found\": \"GROUND\" }, \"status\": \"OK\" }");
         result = new ResultFactory(parser,previous).getResult();
         map.update(previous,result);
-        //System.out.println(map.toString());
+        System.out.println(map.toString());
 
         previous = thirdEcho;
         parser = new ResultParser("{ \"cost\": 1, \"extras\": { \"range\": 8, \"found\": \"OUT_OF_RANGE\" }, \"status\": \"OK\" }");
         result = new ResultFactory(parser,previous).getResult();
         map.update(previous,result);
-        //System.out.println(map.toString());
+        System.out.println(map.toString());
 
 /*        previous = new Echo(S);
         parser = new ResultParser("{ \"cost\": 1, \"extras\": { \"range\": 3, \"found\": \"OUT_OF_RANGE\" }, \"status\": \"OK\" }");

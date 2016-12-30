@@ -30,17 +30,17 @@ public class Driver {
                 if(currentStrategy.hasNextStrategy()) {
                     currentStrategy = currentStrategy.getNextStrategy();
                     currentStrategy.initialize(listOfDecision);
-                    getNextDecision();
+                    return getNextDecision();
                     //decision = Optional.ofNullable(currentStrategy.getDecision());
                 }else{ // no more strategy & decisions, stop the bot
                     return Optional.empty();
                 }
             }else{
                 currentStrategy.getDecisions(listOfDecision);
-                getNextDecision();
+                return getNextDecision();
             }
         }
-        return decision;
+        //return decision;
     }
 
     /**

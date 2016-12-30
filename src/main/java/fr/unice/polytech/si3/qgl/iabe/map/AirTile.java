@@ -7,8 +7,9 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class AirTile {
     private EarthTile[][] airTile;
-    private boolean isDiscovered = false;
     private int xPos, yPos;
+    private boolean containGround = false;
+    private boolean isBorder = false;
 
     public AirTile(int xPos, int yPos) {
         this.airTile = new EarthTile[3][3];
@@ -16,17 +17,12 @@ public class AirTile {
         this.yPos = yPos;
     }
 
-    public boolean isDiscovered() {
-        return isDiscovered;
+    public AirTile(int xPos, int yPos, boolean isBorder) {
+        this.xPos = xPos;
+        this.yPos = yPos;
+        this.isBorder = isBorder;
     }
 
-    public void setDiscovered(boolean discovered) {
-        this.isDiscovered = discovered;
-    }
-
-    public boolean isGround() {
-        throw new NotImplementedException();
-    }
 
     public int getX() {
         return xPos;
@@ -34,5 +30,21 @@ public class AirTile {
 
     public int getY() {
         return yPos;
+    }
+
+    public void setContainGround(boolean containGround) {
+        this.containGround = containGround;
+    }
+
+    public boolean containGround() {
+        return containGround;
+    }
+
+    public void setIsBorder(boolean isBorder) {
+        this.isBorder = isBorder;
+    }
+
+    public boolean isBorder() {
+        return isBorder;
     }
 }
